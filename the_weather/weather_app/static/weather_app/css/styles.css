@@ -1,0 +1,14 @@
+p, button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .card-body > *:not(:last-child) {
+    margin-bottom: 10px;
+  }
+  

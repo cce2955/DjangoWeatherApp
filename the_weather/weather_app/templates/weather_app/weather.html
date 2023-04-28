@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center">
+  <form method="post">
+    {% csrf_token %}
+    <br>Still working on it, the only valid choices are London, New York, and Tokyo <br>
+    <input type="text" name="city" id="city-input" list="city-datalist" oninput="updateCitySuggestions()">
+    <datalist id="city-datalist"></datalist>
+    <button type="submit">Get Weather</button>
+  </form>
+  <p>Current City: {{ city }}</p>
+  <p>Temperature: <span id="temperature-value">{{ temperature }}</span><span id="temperature-unit">C</span></p>
+  <input type="hidden" id="temperature-celsius" value="{{ temperature }}">
+  <button id="toggle-unit" onclick="toggleTemperatureUnit()">Switch to Fahrenheit</button>
+  <p>Description: {{ description }}</p>
+  <script>
+    let isCelsius = true;
+    function updateCitySuggestions() {
+        const cityInput = document.getElementById("city-input");
+        const cityDatalist = document.getElementById("city-datalist");
+
+        fetch(`/city_suggestions/?prefix=\\${cityInput.value}`)
+            .then(response => response.json())
+            .then(data => {
+                cityDatalist.innerHTML = '';
+                data.suggestions.forEach(city => {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    cityDatalist.appendChild(option);
+                });
+            });
+    }
+
+    function toggleTemperatureUnit() {
+        const temperatureValueElement = document.getElementById("temperature-value");
+        const temperatureUnitElement = document.getElementById("temperature-unit");
+        const temperatureCelsius = parseFloat(document.getElementById("temperature-celsius").value);
+    
+        if (isCelsius) {
+            // Convert Celsius to Fahrenheit and round it
+            temperatureValueElement.innerHTML = Math.round(temperatureCelsius * 9 / 5 + 32);
+            document.getElementById("toggle-unit").innerHTML = "Switch to Celsius";
+            temperatureUnitElement.innerHTML = "F";
+        } else {
+            // Convert Fahrenheit to Celsius and round it
+            temperatureValueElement.innerHTML = Math.round((temperatureCelsius - 32) * 5 / 9);
+            document.getElementById("toggle-unit").innerHTML = "Switch to Fahrenheit";
+            temperatureUnitElement.innerHTML = "C";
+        }
+        isCelsius = !isCelsius;
+    }
+  </script>
+</div>
+{% endblock %}
