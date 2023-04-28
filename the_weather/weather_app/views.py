@@ -63,15 +63,9 @@ def weather(request):
     current_file_path = os.path.abspath(__file__)
     current_dir_path = os.path.dirname(current_file_path)
     key_ini_path = os.path.join(current_dir_path, 'key.ini')
-
     config = configparser.ConfigParser()
     config.read(key_ini_path)
-  
     api_key = config.get('API', 'WEATHER_API_KEY', fallback=None)
-    
-    
-
-    
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
     city = "London"
 
